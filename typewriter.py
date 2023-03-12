@@ -9,7 +9,6 @@ def format_sagacious_words(str):
     if len(str) == 0:
         return(None)
     r=[]
-
     tray = ''.join([char for char in str if 32 <= ord(char) <= 126])
     #Find DELIM closest to MAX_WIDTH
     while len(tray) >= MAX_WIDTH:
