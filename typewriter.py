@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#https://learn.adafruit.com/pi-thermal-printer/pi-setup-part-3
 import argparse
 MAX_WIDTH=40
 DELIM=' '
