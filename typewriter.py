@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 #https://learn.adafruit.com/pi-thermal-printer/pi-setup-part-3
 import argparse
-MAX_WIDTH=40
+import serial
+MAX_WIDTH=35
 DELIM=' '
 def format_sagacious_words(str):
     '''
@@ -27,21 +28,20 @@ def print_sagacious_words(wisdom):
     if len(wisdom) == 0:
         return(None)
     for line in wisdom:
-        print(line)
+        line = line+'\n'
+        ser.write(line.encode())
+    ser.write('\n'.encode()*3)
+    ser.write(chr(27)+'m'.encode())
 def main():
     parser = argparse.ArgumentParser(description='Print sagacious words to...')
     parser.add_argument('-p','--port',
                         type=str,
                         metavar='port',
                         help='Serial port for output. Default: ttyAMA0',
-                        default='ttyAMA0')
-    parser.add_argument('-l','--log',
-                        type=bool,
-                        metavar='log',
-                        help='Log output',
-                        default=False)
+                        default='ttyUSB0')
     args = parser.parse_args()
-    print(args)    
+    global ser
+    ser=serial.Serial('/dev/{}'.format(args.port), 38400, timeout=5)
     #sagacious_words = input("Enter string\n")
     sagacious_words = '''Yea, you shouldn't have to go to this much trouble to get VS Code to recognize your virtual environment. The folder is right there in the directory you opened VS Code in. The VS Code team should address this if they truly want to support Python. It cant possibly be that hard'''
     print_sagacious_words(format_sagacious_words(sagacious_words))
