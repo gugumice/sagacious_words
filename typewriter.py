@@ -12,7 +12,6 @@ def format_sagacious_words(str):
     if len(str) == 0:
         return(None)
     r=[]
-
     tray = ''.join([char for char in str if 32 <= ord(char) <= 126])
     #Find DELIM closest to MAX_WIDTH
     while len(tray) >= MAX_WIDTH:
@@ -30,9 +29,15 @@ def print_sagacious_words(wisdom):
     for line in wisdom:
         line = line+'\n'
         ser.write(line.encode())
-    ser.write('\n'.encode()*3)
-    ser.write(chr(27)+'m'.encode())
+    #ser.write('\n'.encode()*3)
+    content = b"\x1B\x64\x05\x1B\x6D"
+    print(content)
+    ser.write(content)
 def main():
+    '''
+    Yea, you shouldn't have to go to this much trouble to get VS Code to recognize your virtual environment.
+     The folder is right there in the directory you opened VS Code in. The VS Code team should address this if they truly want to
+     support Python. It cant possibly be that hard'''
     parser = argparse.ArgumentParser(description='Print sagacious words to...')
     parser.add_argument('-p','--port',
                         type=str,
@@ -42,9 +47,13 @@ def main():
     args = parser.parse_args()
     global ser
     ser=serial.Serial('/dev/{}'.format(args.port), 38400, timeout=5)
-    #sagacious_words = input("Enter string\n")
-    sagacious_words = '''Yea, you shouldn't have to go to this much trouble to get VS Code to recognize your virtual environment. The folder is right there in the directory you opened VS Code in. The VS Code team should address this if they truly want to support Python. It cant possibly be that hard'''
-    print_sagacious_words(format_sagacious_words(sagacious_words))
+   
+    #sagacious_words = 
+    #sagacious_words = sagacious_words.strip('\n')
+
+    while True:
+        sagacious_words = input("Enter string\n")
+        print_sagacious_words(format_sagacious_words(sagacious_words))
 if __name__ == '__main__':
     try:
         main()
