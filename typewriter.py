@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 #https://learn.adafruit.com/pi-thermal-printer/pi-setup-part-3
+
 import argparse
 import serial
+import logging
+
 MAX_WIDTH=35
 DELIM=' '
 def format_sagacious_words(str):
@@ -46,15 +49,20 @@ def main():
                         default='ttyUSB0')
     args = parser.parse_args()
     global ser
-    ser=serial.Serial('/dev/{}'.format(args.port), 38400, timeout=5)
-   
+    try:
+        ser=serial.Serial('/dev/{}'.format(args.port), 38400, timeout=5)
+        logging.info('Port /dev/{} open'.format(args.port))
+    except Exception as e:
+        logging.error(e)
     #sagacious_words = 
     #sagacious_words = sagacious_words.strip('\n')
-
     while True:
         sagacious_words = input("Enter string\n")
+        logging.info('>{}'.format(sagacious_words))
         print_sagacious_words(format_sagacious_words(sagacious_words))
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s - %(message)s',filename='/home/pi/sw.log',filemode='a',level=logging.INFO)
+    logging.info('Starting...')
     try:
         main()
     except KeyboardInterrupt:
